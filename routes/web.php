@@ -5,6 +5,7 @@ use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PendataanController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TentangController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     if (Auth::check()) {
-        return redirect()->route('laporan'); // Ganti 'home' dengan rute halaman utama Anda
+        return redirect()->route('beranda'); // Ganti 'home' dengan rute halaman utama Anda
     }
     return redirect()->route('login');
 });
@@ -52,10 +53,15 @@ Route::middleware(['auth', 'mahasiswa'])->group(function () {
     Route::get('/laporan/{id}/edit', [LaporanController::class, 'edit'])->name('laporan.edit');
     Route::put('/laporan/{id}', [LaporanController::class, 'update'])->name('laporan.update');
     Route::delete('/laporan/{id}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
+
+    route::get('/beranda', [TentangController::class, 'index'])->name('beranda');
+    route::get('/tentang/{id}/index', [TentangController::class, 'indexTentang'])->name('tentang.index');
+    Route::get('/tentang/{id}/edit', [TentangController::class, 'edit'])->name('tentang.edit');
+    Route::put('/tentang/{id}', [TentangController::class, 'update'])->name('tentang.update');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/ukkb/index', [AdminController::class, 'index'])->name('ukkb.index');
+    Route::get('/admin/index', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/ukkb/create', [AdminController::class, 'create'])->name('ukkb.create');
     Route::get('/ukkb/showUkkb', [AdminController::class, 'showUkkb'])->name('ukkb.all');
     Route::get('ukkb/{id}/{tab?}', [AdminController::class, 'show'])->name('ukkb.show');
@@ -63,5 +69,5 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/ukkb/{id}/edit', [AdminController::class, 'edit'])->name('ukkb.edit');
     Route::put('/ukkb/{id}/update', [AdminController::class, 'update'])->name('ukkb.update');
     Route::delete('/ukkb/{id}/destroy', [AdminController::class, 'destroy'])->name('ukkb.destroy');
-    
+
 });

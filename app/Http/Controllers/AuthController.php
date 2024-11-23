@@ -52,34 +52,36 @@ class AuthController extends Controller
     // Fungsi untuk login
     public function login(Request $request)
     {
-        // Validasi data yang diterima
+        // Validasi input
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
 
-        // Cek apakah email sudah terdaftar
-        $user = User::where('email', $request->email)->first();
-        if (!$user) {
-            // Jika email tidak ditemukan, kembalikan dengan pesan error
-            return redirect()->back()->with('error', 'Akun belum terdaftar. Silakan buat akun terlebih dahulu.')->withInput();
-        }
-
-        // Cek apakah kredensial cocok
+        // Cek kredensial
         if (!Auth::attempt($request->only('email', 'password'))) {
-            return redirect()->back()->with('error', 'Kredensial login tidak valid')->withInput();
+            return redirect()->back()->with('error', 'Kredensial tidak valid.')->withInput();
         }
 
-        // Cek peran pengguna dan redirect sesuai
+        // Ambil user yang login
+        $user = Auth::user();
+
+        // Ambil data UKKB yang terkait
+        $ukkb = $user->ukkb;
+
+        // Redirect sesuai peran
         if ($user->role === 'admin') {
-            return redirect()->route('ukkb')->with('success', 'Login berhasil sebagai Admin!');
+            return redirect()->route('admin.index')->with('success', 'Login berhasil sebagai Admin!');
         } elseif ($user->role === 'mahasiswa') {
-            return redirect()->route('laporan')->with('success', 'Login berhasil sebagai Mahasiswa!');
+            return redirect()->route('laporan')->with([
+                'success' => 'Login berhasil sebagai Mahasiswa!',
+                'ukkb' => $ukkb // Kirim data UKKB jika diperlukan
+            ]);
         } else {
-            // Jika role tidak dikenal, kembalikan dengan pesan error
             return redirect()->back()->with('error', 'Peran pengguna tidak valid.')->withInput();
         }
     }
+
 
     // Fungsi untuk logout
     public function logout()
