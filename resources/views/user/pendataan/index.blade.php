@@ -13,13 +13,16 @@
                 {{ session('success') }}
             </div>
         @endif
-        <h2 class="main-title mb-5">Daftar Anggota</h2>
-
+        <div class="row">
+            <div class="col d-flex justify-content-start py-3">
+                <h2>Anggota</h2>
+            </div>
+            <div class="col d-flex justify-content-end py-3">
+                <a class="btn btn-primary" href="{{ route('pendataan.create') }}">Tambah Anggota</a>
+            </div>
+        </div>
         <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-end">
-                    <a class="btn btn-primary" href="{{ route('pendataan.create') }}">Tambah Anggota</a>
-                </div>
                 <table class="table table-bordered display" id="datatable" style="width: 100%">
                     <thead>
                         <tr>

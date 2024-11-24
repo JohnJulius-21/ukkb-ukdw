@@ -8,11 +8,10 @@
                 {{ session('success') }}
             </div>
         @endif
-        <h2 class="main-title mb-5">Tentang Kami</h2>
+        <h2 class="main-title">Tentang Kami</h2>
         <div class="card">
             <div class="card-body">
                 <div class="row gx-4">
-                    {{-- DATA STATIS --}}
                     <div class="col d-flex justify-content-end">
                         <a href="{{ route('tentang.edit', ['id' => Auth::user()->ukkb->id]) }}"
                             class="btn btn-primary">Edit</a>

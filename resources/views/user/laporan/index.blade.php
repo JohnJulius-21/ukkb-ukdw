@@ -8,28 +8,36 @@
                 {{ session('success') }}
             </div>
         @endif
-        <h2 class="main-title mb-5">Laporan Kegiatan</h2>
+        <div class="row">
+            <div class="col d-flex justify-content-start py-3">
+                <h2>Kegiatan</h2>
+            </div>
+            <div class="col d-flex justify-content-end py-3">
+                <a class="btn btn-primary" href="{{ route('tambah.laporan') }}">Tambah Kegiatan</a>
+            </div>
+        </div>
 
         <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-end">
-                    <a class="btn btn-primary" href="{{ route('tambah.laporan') }}">Tambah Laporan</a>
-                </div>
                 <table class="table table-bordered display" id="datatable" style="width: 100%">
                     <thead>
                         <tr>
-                            <th>Judul Laporan</th>
-                            <th>Tanggal Laporan</th>
+                            <th>Tangal Kegiatan</th>
+                            <th>Nama Kegiatan</th>
+                            <th>Tempat Kegiatan</th>
                             <th>Deskripsi</th>
+                            <th>Dokumentasi Kegiatan</th>
                             <th class="text-right">Tindakan</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($laporan as $item)
                             <tr>
-                                <td>{{ $item['judul_laporan'] }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item['tanggal_laporan'])->format('d F Y') }}</td>
+                                <td>{{ $item['judul_laporan'] }}</td>
+                                <td>...</td>
                                 <td>{{ substr($item['deskripsi_laporan'], 0, 50) }}...</td>
+                                <td>...</td>
                                 <td class="text-right">
                                     <a class="btn btn-warning"
                                         href="{{ route('laporan.edit', $item->laporan_id) }}">Edit</a>

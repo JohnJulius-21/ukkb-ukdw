@@ -73,7 +73,7 @@ class AuthController extends Controller
         if ($user->role === 'admin') {
             return redirect()->route('admin.index')->with('success', 'Login berhasil sebagai Admin!');
         } elseif ($user->role === 'mahasiswa') {
-            return redirect()->route('laporan')->with([
+            return redirect()->route('beranda')->with([
                 'success' => 'Login berhasil sebagai Mahasiswa!',
                 'ukkb' => $ukkb // Kirim data UKKB jika diperlukan
             ]);
