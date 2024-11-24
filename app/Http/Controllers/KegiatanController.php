@@ -6,15 +6,15 @@ use App\Models\Laporan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LaporanController extends Controller
+class KegiatanController extends Controller
 {
     public function index()
     {
         // Ambil ID user yang sedang login
         $userId = Auth::id();
-        $laporan = Laporan::where('user_id',$userId)->get();
-        // dd($laporan);
-        return view("user.laporan.index", compact('laporan'));
+        $kegiatan = Laporan::where('user_id',$userId)->get();
+        // dd($kegiatan);
+        return view("user.laporan.index", compact('kegiatan'));
     }
 
     public function create()
@@ -29,16 +29,18 @@ class LaporanController extends Controller
             'judul' => 'required|string|max:255',
             'tanggal' => 'required|date',
             'files.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048', // Adjust types as needed
+            'tempat' => 'required',
             'deskripsi' => 'required',
         ]);
 
         // Step 2: Save the main report data in the database
-        $laporan = new Laporan();
-        $laporan->user_id = Auth::id(); // atau auth()->id()
-        $laporan->judul_laporan = $validatedData['judul'];
-        $laporan->tanggal_laporan = $validatedData['tanggal'];
-        $laporan->deskripsi_laporan = $validatedData['deskripsi'];
-        $laporan->save();
+        $kegiatan = new Laporan();
+        $kegiatan->user_id = Auth::id(); // atau auth()->id()
+        $kegiatan->judul_laporan = $validatedData['judul'];
+        $kegiatan->tanggal_laporan = $validatedData['tanggal'];
+        $kegiatan->deskripsi_laporan = $validatedData['deskripsi'];
+        $kegiatan->tempat_kegiatan = $validatedData['tempat'];
+        $kegiatan->save();
 
         // Step 3: Handle file uploads, if any
         if ($request->hasFile('files')) {
@@ -47,7 +49,7 @@ class LaporanController extends Controller
                 $path = $file->store('laporan_files');
 
                 // Save each file entry in the `files` table
-                $laporan->files()->create([
+                $kegiatan->files()->create([
                     'file_name' => $file->getClientOriginalName(),
                     'file_path' => $path,
                 ]);
@@ -56,16 +58,16 @@ class LaporanController extends Controller
 
 
         // Step 4: Redirect or return success response
-        return redirect()->route('laporan')->with('success', 'Laporan berhasil disimpan.');
+        return redirect()->route('kegiatan')->with('success', 'Laporan berhasil disimpan.');
     }
 
     public function edit($id)
     {
         // Mencari laporan berdasarkan ID
-        $laporan = Laporan::findOrFail($id);
+        $kegiatan = Laporan::findOrFail($id);
 
         // Menampilkan view edit dengan data laporan
-        return view("user.laporan.edit", compact('laporan'));
+        return view("user.laporan.edit", compact('kegiatan'));
     }
 
     public function update(Request $request, $id)
@@ -75,17 +77,19 @@ class LaporanController extends Controller
             'judul' => 'required|string|max:255',
             'tanggal' => 'required|date',
             'files.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048', // Adjust types as needed
+            'tempat' => 'required',
             'deskripsi' => 'required',
         ]);
 
         // Cari laporan berdasarkan ID
-        $laporan = Laporan::findOrFail($id);
+        $kegiatan = Laporan::findOrFail($id);
 
         // Update data laporan
-        $laporan->judul_laporan = $validatedData['judul'];
-        $laporan->tanggal_laporan = $validatedData['tanggal'];
-        $laporan->deskripsi_laporan = $validatedData['deskripsi'];
-        $laporan->save();
+        $kegiatan->judul_laporan = $validatedData['judul'];
+        $kegiatan->tanggal_laporan = $validatedData['tanggal'];
+        $kegiatan->deskripsi_laporan = $validatedData['deskripsi'];
+        $kegiatan->tempat_kegiatan = $validatedData['tempat'];
+        $kegiatan->save();
 
         // Handle file upload if any (optional)
         if ($request->hasFile('files')) {
@@ -93,7 +97,7 @@ class LaporanController extends Controller
                 $path = $file->store('laporan_files');
 
                 // Jika Anda ingin menyimpan file baru, sesuaikan logika di bawah
-                $laporan->files()->create([
+                $kegiatan->files()->create([
                     'file_name' => $file->getClientOriginalName(),
                     'file_path' => $path,
                 ]);
@@ -101,19 +105,19 @@ class LaporanController extends Controller
         }
 
         // Redirect ke halaman laporan dengan pesan sukses
-        return redirect()->route('laporan')->with('success', 'Laporan berhasil diperbarui.');
+        return redirect()->route('kegiatan')->with('success', 'Laporan berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         // Cari laporan berdasarkan ID
-        $laporan = Laporan::findOrFail($id);
+        $kegiatan = Laporan::findOrFail($id);
 
         // Hapus laporan
-        $laporan->delete();
+        $kegiatan->delete();
 
         // Redirect ke halaman laporan dengan pesan sukses
-        return redirect()->route('laporan')->with('success', 'Laporan berhasil dihapus.');
+        return redirect()->route('kegiatan')->with('success', 'Laporan berhasil dihapus.');
     }
 
 

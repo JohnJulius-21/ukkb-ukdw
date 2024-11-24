@@ -17,14 +17,14 @@
                     <!-- Total UKKB -->
                     <div class="col-md-6">
                         <div class="p-3 border text-center bg-white">
-                            <h4>11</h4>
+                            <h4>{{ $jumlahKegiatan }}</h4>
                             <p>Jumlah Kegiatan</p>
                         </div>
                     </div>
                     <!-- Total Anggota UKKB -->
                     <div class="col-md-6">
                         <div class="p-3 border text-center bg-white">
-                            <h4>163</h4>
+                            <h4>{{ $jumlahAnggota }}</h4>
                             <p>Jumlah Anggota</p>
                         </div>
                     </div>
@@ -53,24 +53,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($kegiatan as $item)
                             <tr>
-                                <td>1</td>
-                                <td>Makrab Formapa</td>
-                                <td>26 Oktober 2024</td>
-                                <td>Wisma UKDW</td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item['judul_laporan'] }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item['tanggal_laporan'])->format('d F Y') }}</td>
+                                <td>{{ $item['tempat_kegiatan'] }}</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Gelar Budaya day 1</td>
-                                <td>2 November 2024</td>
-                                <td>Halaman Koinonia</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Makrab IMT</td>
-                                <td>9 November 2024</td>
-                                <td>Wisma UGM</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

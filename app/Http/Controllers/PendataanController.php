@@ -37,7 +37,6 @@ class PendataanController extends Controller
         // Menyimpan data mahasiswa
         $mahasiswa = new Mahasiswa();
         $mahasiswa->user_id = Auth::id();
-        ;
         $mahasiswa->nama_mahasiswa = $validatedData['nama'];
         $mahasiswa->nim = $validatedData['nim'];
         $mahasiswa->fakultas = $validatedData['fakultas'];

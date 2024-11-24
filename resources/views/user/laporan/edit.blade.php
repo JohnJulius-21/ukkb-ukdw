@@ -6,7 +6,7 @@
 
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('laporan.update', $laporan->laporan_id) }}" method="POST"
+                <form action="{{ route('kegiatan.update', $kegiatan->laporan_id) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT') <!-- Menggunakan method PUT untuk update -->
@@ -16,13 +16,19 @@
                             <div class="mb-3">
                                 <label for="judul" class="form-label">Judul Laporan</label>
                                 <input type="text" class="form-control" id="judul" name="judul"
-                                    value="{{ $laporan->judul_laporan }}" required>
+                                    value="{{ $kegiatan->judul_laporan }}" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="tanggal" class="form-label">Tanggal Laporan</label>
                                 <input type="date" class="form-control" id="tanggal" name="tanggal"
-                                    value="{{ $laporan->tanggal_laporan }}" required>
+                                    value="{{ $kegiatan->tanggal_laporan }}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tempat" class="form-label">Tempat Kegiatan</label>
+                                <input type="text" class="form-control" id="tempat" name="tempat"
+                                    value="{{ $kegiatan->tempat_kegiatan }}" required>
                             </div>
 
                             <div class="mb-3">
@@ -31,13 +37,13 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="deskripsi" class="form-label">Deskripsi Laporan</label>
-                                <textarea class="form-control" id="deskripsi" name="deskripsi" required>{{ $laporan->deskripsi_laporan }}</textarea>
+                                <label for="deskripsi" class="form-label">Deskripsi Kegiatan</label>
+                                <textarea class="form-control" id="deskripsi" name="deskripsi" required>{{ $kegiatan->deskripsi_laporan }}</textarea>
                             </div>
                         </div>
                     </div>
-                    <a class="btn btn-secondary" href="{{ route('laporan') }}">Kembali</a>
-                    <button type="submit" class="btn btn-primary">Update Laporan</button>
+                    <a class="btn btn-secondary" href="{{ route('kegiatan') }}">Kembali</a>
+                    <button type="submit" class="btn btn-primary">Update Kegiatan</button>
                 </form>
             </div>
         </div>

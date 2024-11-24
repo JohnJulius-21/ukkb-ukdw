@@ -1,7 +1,7 @@
 <aside class="left-sidebar">
     <div>
         <div class="brand-logo d-flex align-items-center justify-content-between text-center">
-            <a href="{{ route('laporan') }}" class="text-nowrap logo-img">
+            <a href="{{ route('beranda', ['id' => Auth::user()->ukkb->id]) }}" class="text-nowrap logo-img">
                 <img src="{{ asset('/assets/images/logo.png') }}" alt="" style="width: 150px" />
             </a>
             <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -13,7 +13,7 @@
         <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
             <ul id="sidebarnav">
                 <li class="sidebar-item">
-                    <a class="sidebar-link {{ Request::is('beranda*') ? 'active' : '' }}" href="{{ route('beranda') }}"
+                    <a class="sidebar-link {{ Request::is('beranda*') ? 'active' : '' }}" href="{{ route('beranda', ['id' => Auth::user()->ukkb->id]) }}"
                         aria-expanded="false">
                         <iconify-icon icon="solar:widget-add-line-duotone"></iconify-icon>
                         <span class="hide-menu">Beranda</span>
@@ -21,7 +21,7 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a class="sidebar-link {{ Request::is('laporan*') ? 'active' : '' }}" href="{{ route('laporan') }}"
+                    <a class="sidebar-link {{ Request::is('kegiatan*') ? 'active' : '' }}" href="{{ route('kegiatan') }}"
                         aria-expanded="false">
                         <iconify-icon icon="solar:file-text-line-duotone"></iconify-icon>
                         <span class="hide-menu">Kegiatan</span>

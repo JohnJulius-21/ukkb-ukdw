@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title fw-semibold mb-4">Forms Tambah Laporan Kegiatan</h5>
-                <form action="{{ route('laporan.store') }}" method="POST" enctype="multipart/form-data" class="container">
+                <form action="{{ route('kegiatan.store') }}" method="POST" enctype="multipart/form-data" class="container">
                     @csrf
                     <div class="card">
                         <div class="card-body">
@@ -24,7 +24,12 @@
                                 <input type="date" name="tanggal" class="form-control" id="tanggal">
                             </div>
                             <div class="mb-3">
-                                <label for="formFileMultiple" class="form-label">Lampiran File</label>
+                                <label for="exampleFormControlInput1" class="form-label">Tempat Kegiatan</label>
+                                <input type="text" name="tempat" class="form-control" id="exampleFormControlInput1"
+                                    placeholder="Masukan Tempat Kegiatan">
+                            </div>
+                            <div class="mb-3">
+                                <label for="formFileMultiple" class="form-label">Dokumentasi Kegiatan</label>
                                 <input class="form-control" type="file" name="files[]" id="formFileMultiple" multiple>
                             </div>
                             <div class="mb-3">
@@ -33,7 +38,7 @@
                             </div>
                         </div>
                     </div>
-                    <a class="btn btn-secondary" href="{{ route('laporan') }}">Kembali</a>
+                    <a class="btn btn-secondary" href="{{ route('kegiatan') }}">Kembali</a>
                     <button class="btn btn-primary" type="submit">Simpan</button>
                 </form>
             </div>

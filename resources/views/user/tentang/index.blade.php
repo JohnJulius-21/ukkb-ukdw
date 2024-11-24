@@ -27,25 +27,21 @@
                                     </div>
                                     <div class="col">
                                         <h3>Sejarah</h3>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-                                            vitae
-                                            urna nisi.</p>
+                                        <p>{{ $selectedUkkb->sejarah }}</p>
                                     </div>
                                 </div>
                                 <div>
                                     <h3>Visi</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae
-                                        urna nisi.</p>
+                                    <p>{{ $selectedUkkb->visi }}</p>
                                 </div>
                                 <div>
                                     <h3>Misi</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae
-                                        urna nisi.</p>
+                                    <p>{{ $selectedUkkb->misi }}</p>
                                 </div>
                                 <div>
                                     <h3>Struktur Organisasi</h3>
                                     <div>
-                                        <img src="path_to_structure_image" alt="Structure Diagram" style="width: 100%;" />
+                                        <img src="path_to_structure_image" style="width: 100%;" alt="Belum ada Gambar Struktur Organisasi" />
                                     </div>
                                 </div>
                             </div>
@@ -54,22 +50,18 @@
                             <div style="flex: 1 1 30%;" class="border p-3">
                                 <h3>Badan Pengurus Harian</h3>
                                 <ul style="list-style: none; padding: 0;">
-                                    <li>Ketua: xxxxxxx</li>
-                                    <li>Wakil Ketua: xxxxxxx</li>
-                                    <li>Sekretaris 1: xxxxxxx</li>
-                                    <li>Sekretaris 2: xxxxxxx</li>
-                                    <li>Bendahara: xxxxxxx</li>
+                                    {{ $selectedUkkb->badan_pengurus_harian }}
                                 </ul>
 
                                 <h3>Contact</h3>
                                 <ul style="list-style: none; padding: 0;">
                                     <li>Sosial media IG: <a href="https://instagram.com/formapaukdw"
-                                            style="color: #007bff; text-decoration: none;">@formapaukdw</a>
+                                            style="color: #007bff; text-decoration: none;">{{ $selectedUkkb->instagram }}</a>
                                     </li>
                                     <li>Email: <a href="mailto:formapaukdw@gmail.com"
-                                            style="color: #007bff; text-decoration: none;">formapaukdw@gmail.com</a>
+                                            style="color: #007bff; text-decoration: none;">{{ $selectedUkkb->email }}</a>
                                     </li>
-                                    <li>No. WA: 0899999999</li>
+                                    <li>No. WA: {{ $selectedUkkb->nomor_wa}}</li>
                                 </ul>
                             </div>
                         </div>
