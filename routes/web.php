@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AkunController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PendataanController;
@@ -40,14 +41,14 @@ Route::get('/informasi/formapa', [InformasiController::class, 'formapa'])->name(
 Route::get('/informasi/imt', [InformasiController::class, 'imt'])->name('imt');
 
 Route::middleware(['auth', 'mahasiswa'])->group(function () {
-    Route::get('/pendataan', [PendataanController::class, 'index'])->name('pendataan');
+    Route::get('/pendataan/{id}/index', [PendataanController::class, 'index'])->name('pendataan');
     Route::get('/pendataan/create', [PendataanController::class, 'create'])->name('pendataan.create');
     Route::post('/pendataan', [PendataanController::class, 'store'])->name('pendataan.store');
     Route::get('/pendataan/{id}/edit', [PendataanController::class, 'edit'])->name('pendataan.edit');
     Route::put('/pendataan/{id}', [PendataanController::class, 'update'])->name('pendataan.update');
     Route::delete('/pendataan/{id}', [PendataanController::class, 'destroy'])->name('pendataan.destroy');
 
-    route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan');
+    route::get('/kegiatan/{id}/index', [KegiatanController::class, 'index'])->name('kegiatan');
     route::get('/kegiatan/create', [KegiatanController::class, 'create'])->name('tambah.kegiatan');
     Route::post('/kegiatan/store', [KegiatanController::class, 'store'])->name('kegiatan.store');
     Route::get('/kegiatan/{id}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
@@ -58,6 +59,11 @@ Route::middleware(['auth', 'mahasiswa'])->group(function () {
     route::get('/tentang/{id}/index', [TentangController::class, 'indexTentang'])->name('tentang.index');
     Route::get('/tentang/{id}/edit', [TentangController::class, 'edit'])->name('tentang.edit');
     Route::put('/tentang/{id}', [TentangController::class, 'update'])->name('tentang.update');
+
+    
+    route::get('/akun/{id}/index', [AkunController::class, 'index'])->name('akun');
+    Route::get('/akun/{id}/edit', [AkunController::class, 'edit'])->name('akun.edit');
+    Route::put('/akun/{id}', [AkunController::class, 'update'])->name('akun.update');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -76,5 +82,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/ukkb/{id}/store-kegiatan', [AdminController::class, 'storeKegiatan'])->name('ukkb.storeKegiatan');
     Route::put('/ukkb/{id}/update-kegiatan', [AdminController::class, 'updateKegiatan'])->name('ukkb.updateKegiatan');
     Route::delete('/ukkb/{id}/destroy-kegiatan', [AdminController::class, 'destroyKegiatan'])->name('ukkb.destroyKegiatan');
+    Route::put('/ukkb/{id}/update-akun', [AdminController::class, 'updateAkun'])->name('ukkb.updateAkun');
+    Route::delete('/ukkb/{id}/destroy-akun', [AdminController::class, 'destroyAkun'])->name('ukkb.destroyAkun');
 
 });

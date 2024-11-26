@@ -69,13 +69,18 @@ class AuthController extends Controller
         // Ambil data UKKB yang terkait
         $ukkb = $user->ukkb;
 
+        // Simpan logo di session
+        
+        // dd($logo);
+
         // Redirect sesuai peran
         if ($user->role === 'admin') {
             return redirect()->route('admin.index')->with('success', 'Login berhasil sebagai Admin!');
         } elseif ($user->role === 'mahasiswa') {
+            
             return redirect()->route('beranda', ['id' => $user->ukkb->id])->with([
                 'success' => 'Login berhasil sebagai Mahasiswa!',
-                'ukkb' => $ukkb // Kirim data UKKB jika diperlukan
+                'ukkb' => $ukkb, // Kirim data UKKB jika diperlukan
             ]);
         } else {
             return redirect()->back()->with('error', 'Peran pengguna tidak valid.')->withInput();

@@ -13,16 +13,16 @@
         <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
             <ul id="sidebarnav">
                 <li class="sidebar-item">
-                    <a class="sidebar-link {{ Request::is('beranda*') ? 'active' : '' }}" href="{{ route('beranda', ['id' => Auth::user()->ukkb->id]) }}"
-                        aria-expanded="false">
+                    <a class="sidebar-link {{ Request::is('beranda*') ? 'active' : '' }}"
+                        href="{{ route('beranda', ['id' => Auth::user()->ukkb->id]) }}" aria-expanded="false">
                         <iconify-icon icon="solar:widget-add-line-duotone"></iconify-icon>
                         <span class="hide-menu">Beranda</span>
                     </a>
                 </li>
 
                 <li class="sidebar-item">
-                    <a class="sidebar-link {{ Request::is('kegiatan*') ? 'active' : '' }}" href="{{ route('kegiatan') }}"
-                        aria-expanded="false">
+                    <a class="sidebar-link {{ Request::is('kegiatan*') ? 'active' : '' }}"
+                        href="{{ route('kegiatan', ['id' => Auth::user()->ukkb->id]) }}" aria-expanded="false">
                         <iconify-icon icon="solar:file-text-line-duotone"></iconify-icon>
                         <span class="hide-menu">Kegiatan</span>
                     </a>
@@ -30,7 +30,7 @@
 
                 <li class="sidebar-item">
                     <a class="sidebar-link {{ Request::is('pendataan*') ? 'active' : '' }}"
-                        href="{{ route('pendataan') }}" aria-expanded="false">
+                        href="{{ route('pendataan', ['id' => Auth::user()->ukkb->id]) }}" aria-expanded="false">
                         <iconify-icon icon="solar:user-plus-rounded-line-duotone"></iconify-icon>
                         <span class="hide-menu">Anggota</span>
                     </a>
@@ -62,6 +62,14 @@
                             <span class="hide-menu">Tentang Kami (Tidak Tersedia)</span>
                         </a>
                     @endif
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link {{ Request::is('akun*') ? 'active' : '' }}"
+                        href="{{ route('akun', ['id' => Auth::user()->ukkb->id]) }}" aria-expanded="false">
+                        <iconify-icon icon="solar:user-rounded-line-duotone"></iconify-icon>
+                        <span class="hide-menu">Akun</span>
+                    </a>
                 </li>
             </ul>
         </nav>

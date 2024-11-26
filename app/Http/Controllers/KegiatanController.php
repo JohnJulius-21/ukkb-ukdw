@@ -2,17 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Laporan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class KegiatanController extends Controller
 {
-    public function index()
+    public function index($id)
     {
         // Ambil ID user yang sedang login
         $userId = Auth::id();
-        $kegiatan = Laporan::where('user_id',$userId)->get();
+        $users = User::where('ukkb_id', $id)->get();
+        $ukkbId = $users->first()?->ukkb_id;
+        // dd($ukkbId);
+        if ($ukkbId) {
+            $kegiatan = Laporan::where('ukkb_id', $ukkbId)->get();
+        } else {
+            $kegiatan = collect(); // Koleksi kosong jika tidak ada pengguna
+        }        
         // dd($kegiatan);
         return view("user.laporan.index", compact('kegiatan'));
     }

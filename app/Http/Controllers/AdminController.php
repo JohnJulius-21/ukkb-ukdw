@@ -8,6 +8,7 @@ use App\Models\Laporan;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
@@ -45,6 +46,7 @@ class AdminController extends Controller
         $users = User::where('ukkb_id', $id)->get();
         $totalUkkb = Ukkb::count();
         $kegiatan = Laporan::whereIn('user_id', $users->pluck('id'))->get();
+        $kegiatanAll = Laporan::where('ukkb_id', $selectedUkkb->id)->get();
 
         // Ambil data laporan terkait dengan UKKB
         $laporans = Laporan::where('ukkb_id', $selectedUkkb->id)->get();
@@ -52,7 +54,7 @@ class AdminController extends Controller
         // dd($laporans);
         // Ambil data mahasiswa berdasarkan `ukkb_id` dari selectedUkkb
         $mahasiswas = Mahasiswa::where('ukkb_id', $selectedUkkb->id)->get();
-        // dd($mahasiswas);
+
         // Mengambil data mahasiswa terbaru berdasarkan waktu pembuatan
         $mahasiswaTerbaru = Mahasiswa::where('ukkb_id', $selectedUkkb->id)
             ->whereDate('created_at', now()->toDateString())
@@ -72,18 +74,27 @@ class AdminController extends Controller
 
         $laporanId = $request->input('laporan_id'); // Ambil laporan_id
 
-        $laporanEdit = null; // Variabel untuk data laporan yang akan diedit
+        $laporan = null; // Variabel untuk data laporan yang akan diedit
         if ($editMode && $laporanId) {
             // Ambil data laporan yang akan diedit
-            $laporanEdit = Laporan::where('ukkb_id', $selectedUkkb->id)
+            $laporan = Laporan::where('ukkb_id', $selectedUkkb->id)
                 ->where('laporan_id', $laporanId)
                 ->first();
         }
-
+        // dd($laporan);
 
         // Menghitung jumlah anggota dan kegiatan
         $jumlahAnggota = $mahasiswas->count();
         $jumlahKegiatan = Laporan::where('ukkb_id', $selectedUkkb->id)->count();
+        // Menghitung jumlah anggota lama dan terbaru
+        $jumlahAnggotaBaru = Mahasiswa::where('ukkb_id', $selectedUkkb->id)
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
+
+        $jumlahAnggotaLama = Mahasiswa::where('ukkb_id', $selectedUkkb->id)
+            ->whereDate('created_at', '<', now()->toDateString())
+            ->count();
+
 
         // Kirim data ke view
         return view('admin.show', compact(
@@ -93,7 +104,7 @@ class AdminController extends Controller
             'laporans',
             'mahasiswas',
             'mahasiswa',
-            'laporanEdit',
+            'laporan',
             'tab',
             'edit',
             'create',
@@ -101,7 +112,10 @@ class AdminController extends Controller
             'jumlahKegiatan',
             'totalUkkb',
             'kegiatan',
-            'mahasiswaTerbaru' // Ditambahkan variabel mahasiswa terbaru
+            'kegiatanAll',
+            'mahasiswaTerbaru', // Ditambahkan variabel mahasiswa terbaru
+            'jumlahAnggotaBaru', // Tambahkan data anggota baru
+            'jumlahAnggotaLama'  // Tambahkan data anggota lama
         ));
     }
 
@@ -160,13 +174,14 @@ class AdminController extends Controller
 
         // Redirect ke halaman tentang dengan pesan sukses
         return redirect()->route('ukkb.show', ['id' => $ukkb->id, 'tab' => 'anggota'])
-            ->with('success', 'Data UKKB berhasil diperbarui.');
+            ->with('success', 'Data Mahasiswa UKKB berhasil diperbarui.');
     }
 
     public function destroyAnggota(Request $request, $id)
     {
         // Ambil mahasiswa_id dari request
         $mahasiswaId = $request->input('mahasiswa_id');
+        // dd($mahasiswaId);
 
         // Temukan mahasiswa berdasarkan ukkb_id dan mahasiswa_id
         $mahasiswa = Mahasiswa::where('ukkb_id', $id)
@@ -230,6 +245,7 @@ class AdminController extends Controller
 
     public function updateKegiatan(Request $request, $id)
     {
+        // dd($request);
         // Temukan UKKB berdasarkan ID
         $ukkb = Ukkb::findOrFail($id);
 
@@ -245,18 +261,24 @@ class AdminController extends Controller
             'files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
-        // Update data laporan
-        $laporan->update([
-            'judul_laporan' => $validated['judul'],
-            'tanggal_laporan' => $validated['tanggal'],
-            'tempat_kegiatan' => $validated['tempat'],
-            'deskripsi_kegiatan' => $validated['deskripsi'],
-        ]);
+        // Update data kegiatan
+        $laporan->judul_laporan = $validated['judul'];
+        $laporan->tanggal_laporan = $validated['tanggal'];
+        $laporan->tempat_kegiatan = $validated['tempat'];
+        $laporan->deskripsi_laporan = $validated['deskripsi'];
+        $laporan->update();
+
+        // $laporan->update([
+        //     'judul' => $validated['judul'],
+        //     'tanggal_laporan' => $validated['tanggal'],
+        //     'tempat_kegiatan' => $validated['tempat'],
+        //     'deskripsi_kegiatan' => $validated['deskripsi'],
+        // ]);
 
         // Update file dokumentasi jika ada
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
-                $filePath = $file->store('dokumentasi', 'public');
+                $filePath = $file->store('dokumentasi_kegiatan', 'public');
                 $laporan->files()->create([
                     'file_path' => $filePath,
                     'file_name' => $file->getClientOriginalName(),
@@ -272,6 +294,7 @@ class AdminController extends Controller
     {
         // Ambil laporan_id dari request
         $laporanId = $request->input('laporan_id');
+        // dd($laporanId);
 
         // Temukan laporan berdasarkan ukkb_id dan laporan_id
         $laporan = Laporan::where('ukkb_id', $id)
@@ -341,6 +364,95 @@ class AdminController extends Controller
     }
 
 
+    public function updateAkun(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'nama_ukkb' => 'required|string|max:255',
+            'email' => 'required|email', // Pastikan email unik kecuali untuk user yang sedang diedit
+            'password' => 'nullable|string|min:8', // Pastikan password konfirmasi valid
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        // Cari UKKB dan User yang sesuai dengan id
+        $ukkb = Ukkb::findOrFail($id);
+        $user = User::where('ukkb_id', $ukkb->id)->first(); // Ambil user yang terhubung dengan UKKB ini
+
+        // Jika user tidak ditemukan (belum ada user terkait UKKB), maka buat user baru
+        if (!$user) {
+            // Jika tidak ada user terkait UKKB, buat user baru
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password); // Set password jika baru dibuat
+            $user->ukkb_id = $ukkb->id;
+            $user->save();
+        } else {
+            // Jika user sudah ada, hanya update email dan password jika ada perubahan
+            $user->email = $request->email;
+
+            if ($request->filled('password')) {
+                // Jika password diubah, hash passwordnya
+                $user->password = Hash::make($request->password);
+            }
+
+            $user->save();
+        }
+
+        // Update data UKKB (Nama & Logo)
+        $ukkb->nama_ukkb = $request->nama_ukkb;
+
+        // Jika ada logo yang diupload
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('logos', 'public');
+            $ukkb->logo = $logoPath; // Simpan path logo ke database
+        }
+
+        $ukkb->save();
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->route('ukkb.show', ['id' => $ukkb->id, 'tab' => 'akun'])
+            ->with('success', 'Akun berhasil diperbarui!');
+    }
+
+    public function destroyAkun($id)
+    {
+        // Cari UKKB berdasarkan ID
+        $ukkb = Ukkb::findOrFail($id);
+
+        // Cari User yang berelasi dengan UKKB
+        $user = User::where('ukkb_id', $ukkb->id)->first();
+
+        if (!$user) {
+            // Jika tidak ada user terkait dengan UKKB ini, hapus UKKB
+            // Hapus logo jika ada
+            if ($ukkb->logo) {
+                Storage::disk('public')->delete($ukkb->logo);
+            }
+
+            // Hapus data UKKB
+            $ukkb->delete();
+
+            // Redirect kembali dengan pesan sukses
+            return redirect()->route('ukkb.all')->with('success', 'UKKB berhasil dihapus karena tidak ada user terkait.');
+        }
+
+        // Jika ada user, lanjutkan dengan penghapusan data user dan UKKB
+        // Hapus logo dari penyimpanan jika ada
+        if ($user->ukkb->logo) {
+            // Hapus file logo yang terkait
+            Storage::disk('public')->delete($user->ukkb->logo);
+        }
+
+        // Hapus user terlebih dahulu karena memiliki relasi dengan UKKB
+        $user->delete();
+
+        // Hapus data UKKB setelah user dihapus
+        $ukkb->delete();
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->route('ukkb.show', ['id' => $ukkb->id, 'tab' => 'akun'])->with('success', 'Akun dan UKKB berhasil dihapus!');
+    }
 
 
 
@@ -374,7 +486,7 @@ class AdminController extends Controller
             $user->save();
         }
 
-        return redirect()->route('ukkb.index')->with('success', 'UKKB berhasil ditambahkan!');
+        return redirect()->route('ukkb.all')->with('success', 'UKKB berhasil ditambahkan!');
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ukkb;
+use App\Models\User;
 use App\Models\Laporan;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
@@ -13,14 +14,46 @@ class TentangController extends Controller
     public function index($id)
     {
         $userId = Auth::id();
-        $kegiatan = Laporan::where('user_id', $userId)->get();
-        // Mengambil jumlah anggota berdasarkan user_id
-        $jumlahAnggota = Mahasiswa::where('user_id', $userId)->count();
+        // $kegiatan = Laporan::where('user_id', $userId)->get();
+        $users = User::where('ukkb_id', $id)->get();
+        /// Ambil ukkb_id dari pengguna pertama (jika ada pengguna)
+        $ukkbId = $users->first()?->ukkb_id;
+
+        if ($ukkbId) {
+            // Hitung jumlah anggota berdasarkan ukkb_id
+            $jumlahAnggota = Mahasiswa::where('ukkb_id', $ukkbId)->count();
+        } else {
+            $jumlahAnggota = 0; // Jika tidak ada pengguna, jumlah anggota adalah 0
+        }
+
+        $ukkbId = $users->first()?->ukkb_id;
+        // dd($ukkbId);
+        if ($ukkbId) {
+            $kegiatan = Laporan::where('ukkb_id', $ukkbId)->get();
+        } else {
+            $kegiatan = collect(); // Koleksi kosong jika tidak ada pengguna
+        }
+
         // Mengambil jumlah kegiatan berdasarkan user_id
-        $jumlahKegiatan = Laporan::where('user_id', $userId)->count();
+        $jumlahKegiatan = Laporan::where('ukkb_id', $ukkbId)->count();
         $ukkb = Ukkb::all(); // Memuat semua data UKKB
         $selectedUkkb = Ukkb::findOrFail($id);
-        return view('user.index', compact('ukkb', 'selectedUkkb', 'jumlahAnggota', 'jumlahKegiatan', 'kegiatan'));
+        $jumlahAnggotaBaru = Mahasiswa::where('ukkb_id', $selectedUkkb->id)
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
+
+        $jumlahAnggotaLama = Mahasiswa::where('ukkb_id', $selectedUkkb->id)
+            ->whereDate('created_at', '<', now()->toDateString())
+            ->count();
+        return view('user.index', compact(
+            'ukkb',
+            'selectedUkkb',
+            'jumlahAnggota',
+            'jumlahAnggotaBaru',
+            'jumlahAnggotaLama',
+            'jumlahKegiatan',
+            'kegiatan'
+        ));
     }
 
     public function indexTentang($id)

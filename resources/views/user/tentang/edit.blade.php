@@ -95,9 +95,9 @@
                     </div>
 
                     <div class="mt-2">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
                         <a href="{{ route('tentang.index', ['id' => Auth::user()->ukkb->id]) }}"
                             class="btn btn-secondary">Batal</a>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </form>
 

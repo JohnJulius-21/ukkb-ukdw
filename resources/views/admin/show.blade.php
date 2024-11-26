@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
 @section('content')
     @if (session('success'))
@@ -96,7 +96,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($kegiatan as $item)
+                                            @foreach ($kegiatanAll as $item)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['judul_laporan'] }}</td>
@@ -365,7 +365,7 @@
 
                                     <a href="{{ route('ukkb.show', ['id' => $selectedUkkb->id, 'tab' => 'anggota']) }}"
                                         class="btn btn-secondary">Batal</a>
-                                    <button type="submit" class="btn btn-primary">Update Kegiatan</button>
+                                    <button type="submit" class="btn btn-primary">Update Anggota</button>
                                 </form>
                             @else
                                 {{-- DATA STATIS --}}
@@ -440,7 +440,8 @@
                     <div class="card-body">
                         @if ($create)
                             <h5 class="card-title fw-semibold mb-4">Forms Tambah Laporan Kegiatan</h5>
-                            <form action="{{ route('ukkb.storeKegiatan', $selectedUkkb->id) }}" method="POST" enctype="multipart/form-data" class="container">
+                            <form action="{{ route('ukkb.storeKegiatan', $selectedUkkb->id) }}" method="POST"
+                                enctype="multipart/form-data" class="container">
                                 @csrf
                                 <div class="card">
                                     <div class="card-body">
@@ -487,7 +488,7 @@
                                         <div class="mb-3">
                                             <label for="judul" class="form-label">Judul Laporan</label>
                                             <input type="text" name="judul" class="form-control" id="judul"
-                                                value="{{ old('judul', $laporanEdit->judul_laporan) }}"
+                                                value="{{ old('judul', $laporan->judul_laporan) }}"
                                                 placeholder="Masukkan Judul">
                                             @error('judul')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -497,7 +498,7 @@
                                         <div class="mb-3">
                                             <label for="tanggal" class="form-label">Tanggal Kegiatan</label>
                                             <input type="date" name="tanggal" class="form-control" id="tanggal"
-                                                value="{{ old('tanggal', $laporanEdit->tanggal_laporan) }}">
+                                                value="{{ old('tanggal', $laporan->tanggal_laporan) }}">
                                             @error('tanggal')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -506,7 +507,7 @@
                                         <div class="mb-3">
                                             <label for="tempat" class="form-label">Tempat Kegiatan</label>
                                             <input type="text" name="tempat" class="form-control" id="tempat"
-                                                value="{{ old('tempat', $laporanEdit->tempat_kegiatan) }}"
+                                                value="{{ old('tempat', $laporan->tempat_kegiatan) }}"
                                                 placeholder="Masukkan Tempat">
                                             @error('tempat')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -524,7 +525,7 @@
 
                                         <div class="mb-3">
                                             <label for="deskripsi" class="form-label">Deskripsi</label>
-                                            <textarea class="form-control" name="deskripsi" id="deskripsi" cols="30" rows="10">{{ old('deskripsi', $laporanEdit->deskripsi) }}</textarea>
+                                            <textarea class="form-control" name="deskripsi" id="deskripsi" cols="30" rows="10">{{ old('deskripsi', $laporan->deskripsi_laporan) }}</textarea>
                                             @error('deskripsi')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -532,7 +533,7 @@
                                     </div>
                                 </div>
                                 <a class="btn btn-secondary"
-                                    href="{{ route('ukkb.show', ['id' => $selectedUkkb->id]) }}">Batal</a>
+                                    href="{{ route('ukkb.show', ['id' => $selectedUkkb->id, 'tab' => 'kegiatan']) }}">Batal</a>
                                 <button type="submit" class="btn btn-primary">Update</button>
                             </form>
                         @else
@@ -579,7 +580,7 @@
                                                     Edit
                                                 </a>
                                                 <form
-                                                    action="{{ route('ukkb.destroyKegiatan', ['id' => $selectedUkkb->id, 'laporanId' => $laporan->id]) }}"
+                                                    action="{{ route('ukkb.destroyKegiatan', ['id' => $selectedUkkb->id, 'laporan_id' => $laporan->laporan_id]) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
@@ -700,9 +701,9 @@
                                     </div>
 
                                     <div class="mt-2">
-                                        <button type="submit" class="btn btn-primary">Simpan</button>
                                         <a href="{{ route('ukkb.show', ['id' => $selectedUkkb->id, 'tab' => 'tentang']) }}"
                                             class="btn btn-secondary">Batal</a>
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
                                     </div>
                                 </form>
                             @else
@@ -804,36 +805,66 @@
                             @if ($edit)
                                 {{-- FORM EDIT --}}
                                 {{-- {{ route('ukkb.update', $selectedUkkb['id']) }} --}}
-                                <form action="" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('ukkb.updateAkun', $selectedUkkb->id) }}" method="POST"
+                                    enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
                                     <div class="col-12">
                                         <div class="p-3 border">
+                                            <!-- Nama UKKB -->
                                             <div class="mb-3">
                                                 <label for="nama_ukkb" class="form-label">Nama UKKB</label>
                                                 <input type="text" name="nama_ukkb" class="form-control"
-                                                    id="nama_ukkb" value="{{ $selectedUkkb['nama_ukkb'] }}">
+                                                    id="nama_ukkb"
+                                                    value="{{ old('name', $users->pluck('name')->implode(', ') ?? '') }}">
+                                                @error('nama_ukkb')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
                                             </div>
+
+                                            <!-- Email -->
                                             <div class="mb-3">
                                                 <label for="email" class="form-label">Email</label>
                                                 <input type="email" name="email" class="form-control" id="email"
-                                                    value="{{ $selectedUkkb['email'] ?? '' }}">
+                                                    value="{{ old('email', $users->pluck('email')->implode(', ') ?? '') }}">
+                                                @error('email')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
                                             </div>
+                                            {{-- {{ $user->pluck('email')->implode(', ') }} --}}
+                                            <!-- Password -->
                                             <div class="mb-3">
                                                 <label for="password" class="form-label">Password</label>
-                                                <input type="password" name="password" class="form-control"
-                                                    id="password">
+                                                <div class="input-group">
+                                                    <input type="password" name="password" class="form-control"
+                                                        id="password">
+                                                    <button type="button" class="btn btn-outline-secondary"
+                                                        id="togglePassword">
+                                                        <i class="fas fa-eye" id="toggleIcon"></i>
+                                                    </button>
+                                                </div>
+                                                <small class="text-muted">Biarkan kosong jika tidak ingin mengganti
+                                                    password.</small>
+                                                @error('password')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
                                             </div>
+
+                                            <!-- Logo -->
                                             <div class="mb-3">
                                                 <label for="logo" class="form-label">Logo</label>
                                                 <input type="file" name="logo" class="form-control"
                                                     id="logo">
+                                                @error('logo')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
+
                                         <div class="mt-2">
-                                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                             <a href="{{ route('ukkb.show', ['id' => $selectedUkkb->id, 'tab' => 'akun']) }}"
                                                 class="btn btn-secondary">Batal</a>
+                                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                         </div>
                                     </div>
                                 </form>
@@ -844,13 +875,15 @@
                                         <div class="mb-3">
                                             <label for="exampleFormControlInput1" class="form-label">Nama UKKB</label>
                                             <input type="text" name="nama_ukkb" class="form-control"
-                                                id="exampleFormControlInput1" value="{{ $selectedUkkb['nama_ukkb'] }}"
+                                                id="exampleFormControlInput1"
+                                                value="{{ old('email', $users->pluck('name')->implode(', ') ?? '') }}"
                                                 disabled>
                                         </div>
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Email</label>
                                             <input type="email" name="email" class="form-control" id="email"
-                                                value="{{ $selectedUkkb['email'] ?? '' }}" disabled>
+                                                value="{{ old('email', $users->pluck('email')->implode(', ') ?? '') }}"
+                                                disabled>
                                         </div>
                                         <div class="mb-3">
                                             <label for="password" class="form-label">Password</label>
@@ -865,10 +898,15 @@
                                             alt="Logo UKKB" onerror="this.onerror=null;this.src='default-image.jpg';">
                                     </div>
                                 </div>
+
                                 <div class="mt-2">
                                     <a href="{{ route('ukkb.show', ['id' => $selectedUkkb['id'], 'edit' => 1, 'tab' => 'akun']) }}"
                                         class="btn btn-primary">Edit</a>
-                                    <a href="" class="btn btn-danger">Hapus</a>
+                                    <form action="{{ route('ukkb.destroyAkun', $selectedUkkb->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Hapus</button>
+                                    </form>
                                 </div>
                             @endif
                         </div>
@@ -884,22 +922,72 @@
         const ctx = document.getElementById('myChart');
 
         new Chart(ctx, {
-            type: 'line',
+            type: 'bar', // Ubah jenis grafik sesuai keinginan (line/bar/pie)
             data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: ['Anggota Lama', 'Anggota Baru'], // Label data
                 datasets: [{
-                    label: '# of Votes',
-                    data: [0, 19, 3, 5, 2, 3],
+                    label: 'Jumlah Anggota',
+                    data: [{{ $jumlahAnggotaLama }}, {{ $jumlahAnggotaBaru }}], // Data dari controller
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)', // Warna untuk anggota lama
+                        'rgba(75, 192, 192, 0.5)' // Warna untuk anggota baru
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
                     borderWidth: 1
                 }]
             },
             options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                    tooltip: {
+                        enabled: true,
+                    }
+                },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            // Pastikan angka tetap bulat
+                            precision: 0,
+                            callback: function(value) {
+                                return Math.floor(value); // Paksa angka menjadi bulat
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Jumlah Anggota'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Kategori'
+                        }
                     }
                 }
             }
         });
+
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+
+            // Ubah tipe input antara 'password' dan 'text'
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+
+            // Ubah ikon berdasarkan status input
+            toggleIcon.classList.toggle('fa-eye', !isPassword);
+            toggleIcon.classList.toggle('fa-eye-slash', isPassword);
+        });
     </script>
+
+
 @endsection

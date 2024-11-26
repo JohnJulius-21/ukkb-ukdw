@@ -54,12 +54,12 @@
                         </thead>
                         <tbody>
                             @foreach ($kegiatan as $item)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item['judul_laporan'] }}</td>
-                                <td>{{ \Carbon\Carbon::parse($item['tanggal_laporan'])->format('d F Y') }}</td>
-                                <td>{{ $item['tempat_kegiatan'] }}</td>
-                            </tr>
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $item['judul_laporan'] }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item['tanggal_laporan'])->format('d F Y') }}</td>
+                                    <td>{{ $item['tempat_kegiatan'] }}</td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -70,7 +70,7 @@
 
 
     <!-- Baris ketiga: Jadwal Kegiatan -->
-    
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -79,19 +79,54 @@
         const ctx = document.getElementById('myChart');
 
         new Chart(ctx, {
-            type: 'line',
+            type: 'bar', // Ubah jenis grafik sesuai keinginan (line/bar/pie)
             data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: ['Anggota Lama', 'Anggota Baru'], // Label data
                 datasets: [{
-                    label: '# of Votes',
-                    data: [0, 19, 3, 5, 2, 3],
+                    label: 'Jumlah Anggota',
+                    data: [{{ $jumlahAnggotaLama }}, {{ $jumlahAnggotaBaru }}], // Data dari controller
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)', // Warna untuk anggota lama
+                        'rgba(75, 192, 192, 0.5)' // Warna untuk anggota baru
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
                     borderWidth: 1
                 }]
             },
             options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                    tooltip: {
+                        enabled: true,
+                    }
+                },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            // Pastikan angka tetap bulat
+                            precision: 0,
+                            callback: function(value) {
+                                return Math.floor(value); // Paksa angka menjadi bulat
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Jumlah Anggota'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Kategori'
+                        }
                     }
                 }
             }

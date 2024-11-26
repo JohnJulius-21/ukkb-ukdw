@@ -2,17 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PendataanController extends Controller
 {
-    public function index()
+    public function index($id)
     {
         // Ambil ID user yang sedang login
         $userId = Auth::id();
-        $mahasiswa = Mahasiswa::where('user_id',$userId)->get();
+        $users = User::where('ukkb_id', $id)->get();
+        
+        /// Ambil ukkb_id dari pengguna pertama (jika ada pengguna)
+        $ukkbId = $users->first()?->ukkb_id;
+        // dd($ukkbId);
+        if ($ukkbId) {
+            $mahasiswa = Mahasiswa::where('ukkb_id', $ukkbId)->get();
+        } else {
+            $mahasiswa = collect(); // Koleksi kosong jika tidak ada pengguna
+        }        
+
         return view("user.pendataan.index", compact('mahasiswa'));
     }
 

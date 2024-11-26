@@ -41,7 +41,8 @@
                                 <div>
                                     <h3>Struktur Organisasi</h3>
                                     <div>
-                                        <img src="path_to_structure_image" style="width: 100%;" alt="Belum ada Gambar Struktur Organisasi" />
+                                        <img src="{{ asset('storage/' . $selectedUkkb['foto_struktur_organisasi']) }}" alt="Belum ada Gambar Struktur Organisasi"
+                                            style="width: 150px; height: 150px; border-radius: 50%;" />
                                     </div>
                                 </div>
                             </div>

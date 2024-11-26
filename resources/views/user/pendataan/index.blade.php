@@ -26,6 +26,7 @@
                 <table class="table table-bordered display" id="datatable" style="width: 100%">
                     <thead>
                         <tr>
+                            <th>No</th>
                             <th>Nama Mahasiswa</th>
                             <th>NIM</th>
                             <th>Fakultas</th>
@@ -37,6 +38,7 @@
                     <tbody>
                         @foreach ($mahasiswa as $item)
                             <tr>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->nama_mahasiswa }}</td>
                                 <td>{{ $item->nim }}</td>
                                 <td>{{ $item->fakultas }}</td>
